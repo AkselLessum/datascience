@@ -31,11 +31,13 @@ print(m_peaks_4)
 
 # Plot the montly KW maxes
 plt.figure(figsize=(10, 6))  # Set figure size
-
-plt.plot(m_peaks_solar.index, m_peaks_solar.values, marker='o', color='yellow', label='Max Prices')
-plt.plot(m_peaks_2.index, m_peaks_2.values, marker='o', color='green', label='Max Prices')
-plt.plot(m_peaks_3.index, m_peaks_3.values, marker='o', color='red', label='Max Prices')
-plt.plot(m_peaks_4.index, m_peaks_4.values, marker='o', color='blue', label='Max Prices')
+plt.title('Monthly peak energy consumption (KW)')
+plt.ylabel('KW')
+plt.xlabel('Month')
+plt.plot(m_peaks_solar.index, m_peaks_solar.values, marker='o', color='#66b3ff', label='Building 10724 (solar)')
+plt.plot(m_peaks_2.index, m_peaks_2.values, marker='o', color='#ffcc99', label='Building 4746')
+plt.plot(m_peaks_3.index, m_peaks_3.values, marker='o', color='#ff9999', label='Building 4462')
+plt.plot(m_peaks_4.index, m_peaks_4.values, marker='o', color='#99ff99', label='Building 10703')
 
 # Add grid and legend
 plt.grid(True)
