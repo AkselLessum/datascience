@@ -44,6 +44,13 @@ sumsScaled = {
 
 print(sumsScaled)
 
+buildingColors = {
+    4462: "#ff9999",
+    10724: "#66b3ff",
+    10703: "#99ff99",
+    4746: "#ffcc99"
+}
+
 # Create the bar chart
 fig, ax = plt.subplots(figsize=(9, 8))
 
