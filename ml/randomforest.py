@@ -9,8 +9,11 @@ df_impExp = pd.read_csv('energy_import_export.csv')
 df_solarConsum = pd.read_csv('solar_self_consumption_main_building.csv')
 met_data = pd.read_csv('timeseries_met_data_202409050822.csv')
 
-# Only deal with import energy
-df_impExp = df_impExp[df_impExp['Retning'] != 'EXPORT']
+# Remove all exports from non solar building
+df_impExp = df_impExp[~((df_impExp['Retning'] == 'EXPORT') & (df_impExp['Måler-Id'] == 707057500085390523))]
+# Make export values into negative values to signify export
+condition = df_impExp['Retning'] == 'EXPORT'
+df_impExp.loc[condition, 'Verdi'] = -df_impExp.loc[condition, 'Verdi']
 # Clean impExp data and reformat for easier merge with other datasets
 df_impExp = df_impExp.drop(['Energikilde', 'Retning', 'Målernavn'], axis=1)
 df_impExp.rename(columns={'Måler-Id': 'property_id'}, inplace=True)
@@ -45,3 +48,5 @@ df_merged.loc[condition, 'solar_consumption'] = 0
 
 # Saved merged and cleaned df
 df_merged.to_csv('ml/new_datasets/allMergedCleaned.csv')
+
+
