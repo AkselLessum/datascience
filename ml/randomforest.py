@@ -82,3 +82,20 @@ combined_df.reset_index(drop=True, inplace=True)
 
 # Save combined df with all predictions in it to file
 combined_df.to_csv('ml/new_datasets/combined_with_predictions.csv', index=False)
+
+# Plot solar consumption
+df_4462.set_index('Tidspunkt', inplace=True)
+df_4462 = df_4462[['solar_consumption', 'Verdi']].resample('D').sum()
+df_4462 = df_4462[df_4462['Verdi'] >= 80]
+df_4462 = df_4462[df_4462['Verdi'] <= 1400]
+
+plt.figure(figsize=(10, 6))
+plt.title('Solar consumption and total consumption')
+plt.ylabel('KW')
+plt.xlabel('Day')
+plt.plot(df_4462.index, df_4462['solar_consumption'].values, color='#FFEB3B', label='Solar consumption')
+plt.plot(df_4462.index, df_4462['Verdi'].values, color='#81C784', label='Total consumption')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()  # Adjust layout to ensure everything fits
+plt.show()
