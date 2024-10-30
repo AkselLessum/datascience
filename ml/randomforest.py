@@ -14,6 +14,12 @@ df['hour'] = df['Tidspunkt'].dt.hour
 df['day'] = df['Tidspunkt'].dt.day
 df['month'] = df['Tidspunkt'].dt.month
 
+df.loc[df['property_id'] == 10724, 'Verdi'] = (
+    df.loc[df['property_id'] == 10724, 'Verdi'] +
+    df.loc[df['property_id'] == 10724, 'solar_consumption']
+)
+
+
 # Split datasets into individual buildings
 df_4462 = df[df['property_id'] == 4462]
 df_4746 = df[df['property_id'] == 4746]
@@ -21,7 +27,7 @@ df_10703 = df[df['property_id'] == 10703]
 df_10724 = df[df['property_id'] == 10724]
 
 # Create lag features to create temporal understanding
-lag_features = ['Verdi', 'temperature', 'cloud_fraction', 'precipitation']
+lag_features = ['temperature', 'cloud_fraction', 'precipitation']
 dfList = [df_4462, df_4746, df_10703, df_10724]
 
 for df in dfList:
@@ -33,6 +39,7 @@ for df in dfList:
 # Split solar building data into train/test with x and y split
 train_features = list(df_4462)
 train_features.remove('Tidspunkt')
+train_features.remove('Verdi')
 train_features.remove('property_id')
 train_features.remove('solar_consumption')
 
@@ -68,6 +75,7 @@ for building_df in [df_4746, df_10703, df_4462]:
 combined_df = pd.concat([df_4462, df_4746, df_10703, df_10724])
 # Remove lagged features for ease of reading
 combined_df = combined_df[['Tidspunkt', 'property_id', 'Verdi', 'temperature', 'wind_speed', 'wind_direction', 'cloud_fraction', 'precipitation', 'solar_consumption']]
+combined_df['imported_portion'] = combined_df['Verdi'] - combined_df['solar_consumption']
 combined_df.sort_values(by='Tidspunkt', inplace=True)
 combined_df.reset_index(drop=True, inplace=True)
 #combined_df.set_index('Tidspunkt', inplace=True)
