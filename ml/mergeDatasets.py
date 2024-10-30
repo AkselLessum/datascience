@@ -45,6 +45,16 @@ df_merged = df_merged.drop(['Unnamed: 0'], axis=1) #Leftover index column
 # Set solar consumption to 0 for all rows that are not the solar building
 condition = df_merged['property_id'] != 10724
 df_merged.loc[condition, 'solar_consumption'] = 0
+# Merge export and import for the solar building, verdi will be aggregate
+df_merged = df_merged.groupby(['Tidspunkt', 'property_id'], as_index=True).agg({
+    'Verdi': 'sum',
+    'temperature': 'first',
+    'wind_speed': 'first',
+    'wind_direction': 'first',
+    'cloud_fraction': 'first',
+    'precipitation' : 'first',
+    'solar_consumption': 'first'
+})
 
 # Saved merged and cleaned df
 df_merged.to_csv('ml/new_datasets/allMergedCleaned.csv')
