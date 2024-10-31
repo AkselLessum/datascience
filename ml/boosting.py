@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor
+import xgboost as xgb
 from sklearn.metrics import root_mean_squared_error
 from sklearn.metrics import mean_absolute_percentage_error
 
@@ -28,6 +28,7 @@ z_scores = np.abs((numerical_cols - numerical_cols.mean()) / numerical_cols.std(
 
 # Filter rows where Z-score is less than threshold
 df = df[(z_scores < z_threshold).all(axis=1)]
+
 
 # Split datasets into individual buildings
 df_4462 = df[df['property_id'] == 4462]
@@ -58,7 +59,7 @@ y_10724 = df_10724['solar_consumption']
 x_10724_train, x_10724_test, y_10724_train, y_10724_test = train_test_split(x_10724, y_10724, test_size=0.2, random_state=42)
 
 # Setup random forest regression model
-model = RandomForestRegressor(n_estimators=100, random_state=42)
+model = xgb.XGBRegressor(objective='reg:squarederror', n_estimators=500, learning_rate=0.1)
 model.fit(x_10724_train, y_10724_train)
 
 y_10724_pred = model.predict(x_10724_test)
@@ -90,7 +91,7 @@ combined_df.reset_index(drop=True, inplace=True)
 #combined_df.set_index('Tidspunkt', inplace=True)
 
 # Save combined df with all predictions in it to file
-combined_df.to_csv('ml/new_datasets/combined_with_predictions.csv', index=False)
+combined_df.to_csv('ml/new_datasets/combined_with_predictions_xgboost.csv', index=False)
 
 # Plot solar consumption
 df_4462.set_index('Tidspunkt', inplace=True)
