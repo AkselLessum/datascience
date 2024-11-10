@@ -30,11 +30,11 @@ merged_df = merged_df[merged_df['total_consum'] >= 80]
 merged_df.to_csv('visualization/new_datasets/mergedSolarSummed.csv')
 
 plt.figure(figsize=(10, 6))
-plt.title('Solar consumption and total consumption')
+plt.title('Solar consumption and imported energy consumption')
 plt.ylabel('KW')
 plt.xlabel('Day')
 plt.plot(merged_df.index, merged_df['solar_consumption'].values, color='#FFEB3B', label='Solar consumption')
-plt.plot(merged_df.index, merged_df['total_consum'].values, color='#81C784', label='Total consumption')
+plt.plot(merged_df.index, merged_df['Verdi'].values, color='#81C784', label='Imported energy consumption')
 plt.grid(True)
 plt.legend()
 plt.tight_layout()  # Adjust layout to ensure everything fits
