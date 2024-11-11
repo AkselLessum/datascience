@@ -22,10 +22,8 @@ df.loc[df['property_id'] == 10724, 'Verdi'] = (
 # Outlier removal
 z_threshold = 3
 numerical_cols = df.select_dtypes(include=[np.number])
-
 # Calculate the Z-scores
 z_scores = np.abs((numerical_cols - numerical_cols.mean()) / numerical_cols.std())
-
 # Filter rows where Z-score is less than threshold
 df = df[(z_scores < z_threshold).all(axis=1)]
 
@@ -39,7 +37,6 @@ df_10724 = df[df['property_id'] == 10724]
 # Create lag features to create temporal understanding
 lag_features = ['temperature', 'cloud_fraction', 'precipitation']
 dfList = [df_4462, df_4746, df_10703, df_10724]
-
 for df in dfList:
     for feature in lag_features:
         for lag in range(1, 10):
@@ -59,7 +56,7 @@ y_10724 = df_10724['solar_consumption']
 x_10724_train, x_10724_test, y_10724_train, y_10724_test = train_test_split(x_10724, y_10724, test_size=0.2, random_state=42)
 
 # Setup random forest regression model
-model = xgb.XGBRegressor(objective='reg:squarederror', n_estimators=500, learning_rate=0.1)
+model = xgb.XGBRegressor(objective='reg:squarederror', n_estimators=2000, learning_rate=0.01)
 model.fit(x_10724_train, y_10724_train)
 
 y_10724_pred = model.predict(x_10724_test)
@@ -93,7 +90,7 @@ combined_df.reset_index(drop=True, inplace=True)
 # Save combined df with all predictions in it to file
 combined_df.to_csv('ml/new_datasets/combined_with_predictions_xgboost.csv', index=False)
 
-# Plot solar consumption
+'''# Plot solar consumption against total consumption
 df_4462.set_index('Tidspunkt', inplace=True)
 df_4462 = df_4462[['solar_consumption', 'Verdi']].resample('D').sum()
 df_4462 = df_4462[df_4462['Verdi'] >= 80]
@@ -108,4 +105,23 @@ plt.plot(df_4462.index, df_4462['Verdi'].values, color='#81C784', label='Total c
 plt.grid(True)
 plt.legend()
 plt.tight_layout()  # Adjust layout to ensure everything fits
-plt.show()
+plt.show()'''
+
+
+'''# Plot solar consumption against imported portion
+df_4462.set_index('Tidspunkt', inplace=True)
+df_4462['imported_portion'] = df_4462['Verdi'] - df_4462['solar_consumption']
+df_4462 = df_4462[['solar_consumption', 'imported_portion']].resample('D').sum()
+df_4462 = df_4462[df_4462['imported_portion'] >= 80]
+df_4462 = df_4462[df_4462['imported_portion'] <= 1400]
+
+plt.figure(figsize=(10, 6))
+plt.title('Solar consumption and imported energy consumption')
+plt.ylabel('KW')
+plt.xlabel('Day')
+plt.plot(df_4462.index, df_4462['solar_consumption'].values, color='#FFEB3B', label='Solar consumption')
+plt.plot(df_4462.index, df_4462['imported_portion'].values, color='#81C784', label='Imported energy consumption')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()  # Adjust layout to ensure everything fits
+plt.show()'''
