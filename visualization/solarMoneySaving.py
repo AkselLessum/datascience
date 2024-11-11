@@ -48,14 +48,14 @@ buildingColors = {
 for house in houses:
     # Filter for each house and calculate cumulative savings
     house_df = merged_df[merged_df['property_id'] == house].copy()
-    house_df['cumulative_savings'] = house_df['savings'].cumsum()  # Cumulative sum of savings
+    house_df['cumulative_savings'] = house_df['solar_cost'].cumsum()  # Cumulative sum of savings
     
     # Plot cumulative savings
     plt.plot(house_df['Tidspunkt'], house_df['cumulative_savings'], 
              label=f'House {house}',
              color=buildingColors.get(house, '#333333'))
 
-plt.title('Cumulative savings by using solar consumption')
+plt.title('Cumulative savings by using solar grid')
 plt.ylabel('Cumulative savings (NOK)')
 plt.xlabel('Timestamp')
 # Set the time range for the plot
