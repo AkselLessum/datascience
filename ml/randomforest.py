@@ -58,7 +58,7 @@ y_10724 = df_10724['solar_consumption']
 x_10724_train, x_10724_test, y_10724_train, y_10724_test = train_test_split(x_10724, y_10724, test_size=0.2, random_state=42)
 
 # Setup random forest regression model
-model = RandomForestRegressor(n_estimators=100, random_state=42)
+model = RandomForestRegressor(n_estimators=500, random_state=42)
 model.fit(x_10724_train, y_10724_train)
 
 y_10724_pred = model.predict(x_10724_test)
@@ -68,7 +68,7 @@ MAPE_10724 = mean_absolute_percentage_error(y_10724_test, y_10724_pred)
 print(mse_10724)
 print(MAPE_10724)
 
-'''importances = model.feature_importances_
+'''importances = model.feature_imp  ortances_
 indices = np.argsort(importances)[::-1]
 
 # Print the feature ranking
