@@ -10,7 +10,7 @@ average_prices_no2 = df.groupby('hour')['NO2'].mean()
 average_prices_no2.loc[24] = average_prices_no2.loc[23]
 
 plt.figure(figsize=(10, 6))
-plt.step(average_prices_no2.index, average_prices_no2.values, where='post', color='#81C784', label='Average Price')
+plt.step(average_prices_no2.index, average_prices_no2.values, where='post', color='#ff9999', label='Average Price', linewidth='3')
 plt.title('Average Electricity Price per Hour')
 plt.ylabel('Average Price (NOK/kWh)')
 plt.xlabel('Hour of Day')
